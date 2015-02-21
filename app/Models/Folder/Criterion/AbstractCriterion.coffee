@@ -1,8 +1,8 @@
-require [
+define [
   'inherit'
   'assert'
-  '../../Message/AbstractMessage.coffee'
-  '../../../Error/NotImplementedError.coffee'
+  '../../Message/AbstractMessage'
+  '../../../Error/NotImplementedError'
 ], (inherit, assert, AbstractMessage, NotImplementedError) ->
   inherit
     _test: (message) ->

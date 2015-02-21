@@ -7,11 +7,9 @@
   },
 
   "dependencies": {
-    "coffee-script": "1.9.1",
     "requirejs": "2.1.16",
     "bootstrap": "3.3.2",
     "font-awesome": "4.3.0",
-    "node-sass": "2.0.1",
     "backbone": "1.1.2",
     "react": "0.12.2",
     "inherit": "2.2.2",
@@ -27,6 +25,10 @@
     "karma-sinon": "1.0.4",
     "karma-expect": "1.1.0",
     "karma-phantomjs-launcher": "0.1.4",
-    "karma": "0.12.31"
+    "karma": "0.12.31",
+
+    "coffee-script": "1.9.1",
+    "node-sass": "2.0.1",
+    "react-tools": "0.12.2"
   }
 }

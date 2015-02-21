@@ -1,8 +1,11 @@
-require ['inherit', 'assert', '../../../Error/NotImplementedError.coffee'], (inherit, assert, NotImplementedError) ->
+define ['inherit', 'assert', '../../../Error/NotImplementedError'], (inherit, assert, NotImplementedError) ->
   inherit
     __constructor: (content) ->
       assert typeof content is 'string'
       @_content = content
+      return @
+
+    toHTML: -> throw new NotImplementedError()
   ,
     ###*
     # Gets the content type to write into the email

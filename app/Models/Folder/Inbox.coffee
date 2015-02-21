@@ -1,7 +1,7 @@
-require [
+define [
   'inherit'
-  'AbstractFolder.coffee'
-  'Criterion/AbstractCriterion.coffee'
+  './AbstractFolder'
+  './Criterion/AbstractCriterion'
 ], (inherit, AbstractFolder, AbstractCriterion) ->
   InboxCriterion = inherit AbstractCriterion,
     _test: (message) ->
@@ -9,5 +9,5 @@ require [
 
   inherit AbstractFolder
     __constructor: ->
-      super new InboxCriterion()
+      @__base new InboxCriterion()
 

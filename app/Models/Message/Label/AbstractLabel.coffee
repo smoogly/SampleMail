@@ -1,2 +1,2 @@
-require ['inherit'], (inherit) ->
+define ['inherit'], (inherit) ->
   inherit {}

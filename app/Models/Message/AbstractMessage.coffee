@@ -1,8 +1,8 @@
-require [
+define [
   '_', 'inherit', 'assert'
-  'MessageBody/AbstractMessageBody.coffee'
-  'Destination/AbstractDestination.coffee'
-  'Label/AbstractLabel.coffee'
+  './MessageBody/AbstractMessageBody'
+  './Destination/AbstractDestination'
+  './Label/AbstractLabel'
 ], (_, inherit, assert, AbstractMessageBody, AbstractDestination, AbstractLabel) ->
   checkDestinations = (destinations) -> _.each destinations, (destination) -> assert destination instanceof AbstractDestination
 
@@ -13,6 +13,8 @@ require [
       @_to = []
       @_cc = []
       @_bcc = []
+
+      return @ #Otherwise there would be return @_bcc = [] compiled :/
 
     getBody: -> @_body
     setBody: (body) ->

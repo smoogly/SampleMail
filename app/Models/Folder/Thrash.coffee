@@ -1,8 +1,8 @@
-require [
+define [
   'inherit'
-  'AbstractFolder.coffee'
-  'Criterion/AbstractCriterion.coffee'
-  '../Message/Label/ThrashLabel.coffee'
+  './AbstractFolder'
+  './Criterion/AbstractCriterion'
+  '../Message/Label/ThrashLabel'
 ], (inherit, AbstractFolder, AbstractCriterion, ThrashLabel) ->
   InThrashCriterion = inherit AbstractCriterion,
     _test: (message) ->
@@ -10,6 +10,6 @@ require [
 
   inherit AbstractFolder,
     __constructor: ->
-      super new InThrashCriterion()
+      @__base new InThrashCriterion()
 
 

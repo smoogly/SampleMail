@@ -1,2 +1,2 @@
-require ['inherit', 'AbstractDestination.coffee'], (inherit, AbstractDestination) ->
+define ['inherit', './AbstractDestination'], (inherit, AbstractDestination) ->
   inherit AbstractDestination

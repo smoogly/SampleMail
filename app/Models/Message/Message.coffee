@@ -1,3 +1,3 @@
-require ['inherit', 'AbstractMessage.coffee'], (inherit, AbstractMessage) ->
+define ['inherit', './AbstractMessage'], (inherit, AbstractMessage) ->
   inherit AbstractMessage
 

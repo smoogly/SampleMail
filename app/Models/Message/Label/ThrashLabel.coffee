@@ -1,5 +1,5 @@
-require [
+define [
   'inherit'
-  'AbstractLabel.coffee'
+  './AbstractLabel'
 ], (inherit, AbstractLabel) ->
   inherit AbstractLabel
