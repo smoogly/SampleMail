@@ -7,7 +7,7 @@ require [
   checkDestinations = (destinations) -> _.each destinations, (destination) -> assert destination instanceof AbstractDestination
 
   inherit
-    constructor: ->
+    __constructor: ->
       @_labels = []
 
       @_to = []

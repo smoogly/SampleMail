@@ -1,5 +1,5 @@
 rqeuire ['inherit', 'assert'], (inherit, assert) ->
   inherit
-    constructor: (address) ->
+    __constructor: (address) ->
       assert typeof address is 'string'
       @_address = address

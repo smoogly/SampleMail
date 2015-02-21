@@ -8,6 +8,6 @@ require [
       #TODO: Test whether message is not in thrash and is directed to this mailbox
 
   inherit AbstractFolder
-    constructor: ->
+    __constructor: ->
       super new InboxCriterion()
 

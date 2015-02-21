@@ -9,7 +9,7 @@ require [
       message.hasLabelByType(ThrashLabel)
 
   inherit AbstractFolder,
-    constructor: ->
+    __constructor: ->
       super new InThrashCriterion()
 
 
