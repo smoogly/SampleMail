@@ -2,11 +2,14 @@ require [
   '_', 'inherit', 'assert'
   'MessageBody/AbstractMessageBody.coffee'
   'Destination/AbstractDestination.coffee'
-], (_, inherit, assert, AbstractMessageBody, AbstractDestination) ->
+  'Label/AbstractLabel.coffee'
+], (_, inherit, assert, AbstractMessageBody, AbstractDestination, AbstractLabel) ->
   checkDestinations = (destinations) -> _.each destinations, (destination) -> assert destination instanceof AbstractDestination
 
   inherit
     constructor: ->
+      @_labels = []
+
       @_to = []
       @_cc = []
       @_bcc = []
@@ -28,3 +31,12 @@ require [
     cc: (destinations...) ->
       checkDestinations destinations
       @_cc.concat destinations
+
+    # Check message has a label of a given type
+    hasLabelByType: (Label) ->
+      assert typeof Label is 'function'
+      Boolean _.find(@_labels, (label) -> label instanceof Label)
+
+    addLabel: (label) ->
+      assert label instanceof AbstractLabel
+      @_labels.push(label)

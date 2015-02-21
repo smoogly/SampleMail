@@ -1,0 +1,2 @@
+require ['inherit'], (inherit) ->
+  inherit {}
