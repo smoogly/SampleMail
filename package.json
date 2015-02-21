@@ -2,6 +2,10 @@
   "name": "SampleMail",
   "version": "0.0.1",
 
+  "scripts": {
+    "test": "make node_modules && ./node_modules/karma/bin/karma start"
+  },
+
   "dependencies": {
     "coffee-script": "1.9.1",
     "requirejs": "2.1.16",
@@ -10,5 +14,17 @@
     "node-sass": "2.0.1",
     "backbone": "1.1.2",
     "react": "0.12.2"
+  },
+
+  "devDependencies": {
+    "mocha": "2.1.0",
+    "sinon": "1.12.2",
+    "expect.js": "0.3.1",
+
+    "karma-mocha": "0.1.10",
+    "karma-sinon": "1.0.4",
+    "karma-expect": "1.1.0",
+    "karma-phantomjs-launcher": "0.1.4",
+    "karma": "0.12.31"
   }
 }
