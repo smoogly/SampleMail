@@ -2,7 +2,7 @@ require [
   'inherit'
   'assert'
   '../../Message/AbstractMessage.coffee'
-  '../../Error/NotImplementedError.coffee'
+  '../../../Error/NotImplementedError.coffee'
 ], (inherit, assert, AbstractMessage, NotImplementedError) ->
   inherit
     _test: (message) ->

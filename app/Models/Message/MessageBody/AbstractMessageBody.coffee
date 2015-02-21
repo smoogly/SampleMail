@@ -1,4 +1,4 @@
-require ['inherit', 'assert', '../../Error/NotImplementedError.coffee'], (inherit, assert, NotImplementedError) ->
+require ['inherit', 'assert', '../../../Error/NotImplementedError.coffee'], (inherit, assert, NotImplementedError) ->
   inherit
     __constructor: (content) ->
       assert typeof content is 'string'
