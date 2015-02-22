@@ -14,14 +14,16 @@ var reqConfig = { //Not inlined so that tests can update it
 
         '$': 'http://yastatic.net/jquery/2.1.3/jquery.min',
 
-        'assert': './app/assert'
+        'assert': './app/assert',
+        'util': './app/util'
     },
 
     shim: {
         '$': {
             exports: '$'
         },
-        'React': ['es5-shim', 'es5-sham']
+        'React': ['es5-shim', 'es5-sham'],
+        'es5-sham': ['es5-shim'] //Load shim before sham (otherwise there's a race condition)
     },
 
     map: {
