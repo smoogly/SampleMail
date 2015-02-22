@@ -3,7 +3,7 @@
   "version": "0.0.1",
 
   "scripts": {
-    "test": "make node_modules && ./node_modules/karma/bin/karma start"
+    "test": "make prepare-tests && ./node_modules/karma/bin/karma start"
   },
 
   "dependencies": {
@@ -24,11 +24,13 @@
     "karma-mocha": "0.1.10",
     "karma-sinon": "1.0.4",
     "karma-expect": "1.1.0",
+    "karma-requirejs": "0.2.2",
     "karma-phantomjs-launcher": "0.1.4",
     "karma": "0.12.31",
 
     "coffee-script": "1.9.1",
     "node-sass": "2.0.1",
-    "react-tools": "0.12.2"
+    "react-tools": "0.12.2",
+    "es5-shim": "4.1.0"
   }
 }

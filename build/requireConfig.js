@@ -1,21 +1,27 @@
-require.config({
+var reqConfig = { //Not inlined so that tests can update it
     baseUrl: './',
 
     urlArgs: "bust=" +  (new Date()).getTime(), //TODO: removeme
 
     paths: {
+        'es5-shim': '../node_modules/es5-shim/es5-shim.min',
+        'es5-sham': '../node_modules/es5-shim/es5-sham.min',
+
         'Backbone': '../node_modules/backbone/backbone-min',
-        'React': '../node_modules/react/dist/react.min',
-        '_': '../node_modules/lodash/index',
-        '$': 'http://yastatic.net/jquery/2.1.3/jquery.min',
         'inherit': '../node_modules/inherit/lib/inherit',
+        'React': '../node_modules/react/dist/react',
+        '_': '../node_modules/lodash/index',
+
+        '$': 'http://yastatic.net/jquery/2.1.3/jquery.min',
+
         'assert': './app/assert'
     },
 
     shim: {
         '$': {
             exports: '$'
-        }
+        },
+        'React': ['es5-shim', 'es5-sham']
     },
 
     map: {
@@ -24,6 +30,6 @@ require.config({
             'underscore': '_'
         }
     }
-});
+};
 
-require(['./app/app.js'], function() {});
+require.config(reqConfig);

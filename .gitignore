@@ -32,3 +32,6 @@ node_modules
 
 ## Manually updated
 .idea
+
+test/_build
+build/app

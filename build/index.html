@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <title>Sample Mailing App</title>
     <script src="../node_modules/requirejs/require.js"></script>
-    <script src="./app.js"></script>
+    <script src="requireConfig.js"></script>
+    <script>
+        require(['./app/app.js'], function() {});
+    </script>
 </head>
 <body>
     <div class="message"></div>

@@ -6,15 +6,20 @@ NPM_BIN=$(CURDIR)/node_modules/.bin
 #----------------------------------------------------
 # Variables
 #----------------------------------------------------
+BUILD_DIR=build
+TEST_BUILD_DIR=test/_build
 
 #Build coffee files into build/app tree
 COFFEE=$(shell find ./app -type f | egrep '\.coffee$$')
-COFFEE_BUILT=$(foreach cfile, $(COFFEE), build/$(cfile:.coffee=.js))
+COFFEE_BUILT=$(foreach cfile, $(COFFEE), $(BUILD_DIR)/$(cfile:.coffee=.js))
+
+TESTS=$(shell find ./test -type f | egrep '\.coffee$$')
+TESTS_BUILT=$(foreach cfile, $(TESTS), $(TEST_BUILD_DIR)/$(cfile:.coffee=.js))
 
 
 #Build jsx files into build/app tree
 JSX=$(shell find ./app -type f | egrep '\.jsx$$')
-JSX_BUILT=$(foreach jsx, $(JSX), build/$(jsx:.jsx=.js))
+JSX_BUILT=$(foreach jsx, $(JSX), $(BUILD_DIR)/$(jsx:.jsx=.js))
 
 
 # use NPMCACHE=y to skip loading cached packages from the registry
@@ -46,11 +51,13 @@ coffee: $(COFFEE_BUILT)
 jsx: $(JSX_BUILT)
 
 clean:
-	rm -rf build/app
+	rm -rf $(BUILD_DIR)/app
+	rm -rf $(TEST_BUILD_DIR)
 
 clean-all: clean
 	rm -rf node_modules
 
+prepare-tests: all $(TESTS_BUILT)
 
 
 node_modules: package.json
@@ -69,12 +76,21 @@ endif
 
 .SECONDEXPANSION:
 
-$(COFFEE_BUILT): dependency=$(subst build/,, $(@:.js=.coffee))
+$(COFFEE_BUILT): dependency=$(subst $(BUILD_DIR)/,, $(@:.js=.coffee))
 $(COFFEE_BUILT): outdir=$(dir $@)
 $(COFFEE_BUILT): $$(dependency) node_modules
 	$(NPM_BIN)/coffee -o $(outdir) -c $<
 
-$(JSX_BUILT): dependency=$(subst build/,, $(@:.js=.jsx))
+
+
+$(TESTS_BUILT): dependency=$(subst $(TEST_BUILD_DIR)/,, $(@:.js=.coffee))
+$(TESTS_BUILT): outdir=$(dir $@)
+$(TESTS_BUILT): $$(dependency) node_modules
+	$(NPM_BIN)/coffee -o $(outdir) -c $<
+
+
+
+$(JSX_BUILT): dependency=$(subst $(BUILD_DIR)/,, $(@:.js=.jsx))
 $(JSX_BUILT): $$(dependency) node_modules
 	mkdir -p $(dir $@)
 	@echo "define(['React'], function(React) { return function() { return (" > $@
