@@ -1,11 +1,11 @@
 define [
-  '$', 'Backbone'
+  '_', '$', 'Backbone'
   './Veiws/ReactView/ReactViewFactory'
   './Veiws/ReactView/ReactRootView'
   './template'
   './Models/Message/MessageBody/PlainTextBody'
   './Models/Message/Message'
-], ($, Backbone, ReactViewFactory, RootView, MessageTemplate, MessageBody, Message) ->
+], (_, $, Backbone, ReactViewFactory, RootView, MessageTemplate, MessageBody, Message) ->
   MessageModel = Backbone.Model.extend
     constructor: (attributes) ->
       @_message = new Message()
@@ -17,6 +17,20 @@ define [
     toJSON: ->
       title: @_message.getTitle()
       body: @_message.getBody().toHTML()
+
+    set: (attr, value) ->
+      if _.isPlainObject(attr)
+        hash = attr
+      else
+        hash = {}; hash[attr] = value
+
+      for key, value of hash
+        setter = @_message["set#{key}"]
+        throw new Error("There is no method to set #{key}") unless typeof setter is 'function'
+
+        setter.call(@_message, value)
+
+      @trigger('change') #TODO: only emit if there was a change
 
   MessageView = ReactViewFactory(MessageTemplate)
 

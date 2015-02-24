@@ -1,5 +1,5 @@
 <div>
-    Title: {this.getModel().toJSON().title}<br />
+    Title: {this.state.title}<br />
     Body: <br />
-    <span dangerouslySetInnerHTML={{__html: this.getModel().toJSON().body }} />
+    <span dangerouslySetInnerHTML={{__html: this.state.body }} />
 </div>
