@@ -1,13 +1,24 @@
 define [
-  'inherit'
+  'inherit', 'assert'
+  '../Mailbox'
   './AbstractFolder'
   './Criterion/AbstractCriterion'
-], (inherit, AbstractFolder, AbstractCriterion) ->
-  InboxCriterion = inherit AbstractCriterion,
-    _test: (message) ->
-      #TODO: Test whether message is not in thrash and is directed to this mailbox
+  '../Message/Label/ThrashLabel'
+], (inherit, assert, Mailbox, AbstractFolder, AbstractCriterion, ThrashLabel) ->
 
-  inherit AbstractFolder
-    __constructor: ->
-      @__base new InboxCriterion()
+  inherit AbstractFolder,
+    __constructor: (mailbox) ->
+      @__base mailbox, new @__self.Criterion()
 
+    getName: -> 'Inbox'
+  ,
+    Criterion: inherit AbstractCriterion,
+      __constructor: (mailbox) ->
+        #assert mailbox instanceof Mailbox, 'Mailbox expected' #TODO: fix circular reference :(
+        @_mailbox = mailbox
+        return @__base.apply(@, arguments)
+
+      _test: (message) ->
+        recipients = message.getRecipients()
+        toMe = recipients.length > 0 and recipients.every(@_mailbox.isOwnAddress)
+        return toMe and not message.hasLabelByType(ThrashLabel)

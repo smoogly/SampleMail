@@ -9,7 +9,9 @@ define [
       message.hasLabelByType(ThrashLabel)
 
   inherit AbstractFolder,
-    __constructor: ->
-      @__base new InThrashCriterion()
+    __constructor: (mailbox) ->
+      @__base mailbox, new InThrashCriterion()
+
+    getName: -> 'Thrash'
 
 

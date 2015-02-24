@@ -15,5 +15,5 @@ define [
     # @returns Boolean
     ###
     test: (message) ->
-      assert message instanceof AbstractMessage
+      assert message instanceof AbstractMessage, 'Criterion should be tested against a Message'
       @_test(message)

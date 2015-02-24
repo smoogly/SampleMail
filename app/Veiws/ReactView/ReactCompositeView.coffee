@@ -7,6 +7,8 @@ define (require) ->
       # assert view not instanceof require('./ReactRootView'), 'Root views are not rendered into React.elements and should not be appended'
       @__base.apply @, arguments
 
+    getID: -> @_id or @_id = require('util').uuid() #TODO: test
+
     render: ->
       # Re-render children
       renderedChildren = @__base.apply @, arguments

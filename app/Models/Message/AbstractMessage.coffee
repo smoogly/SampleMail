@@ -42,3 +42,6 @@ define [
     addLabel: (label) ->
       assert label instanceof AbstractLabel
       @_labels.push(label)
+
+    getRecipients: ->
+      return @_to.concat @_cc.concat @_bcc
