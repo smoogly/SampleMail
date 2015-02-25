@@ -4,8 +4,7 @@ define (require) ->
   require('inherit') require('../AbstractView/AbstractView'),
     __constructor: (attrs) ->
       @__base.apply(@, arguments)
-      @model.on('change', @trigger.bind(@, @__self.ONCHANGE_EVENT_NAME)) if @model?
-      @model.once('destroy', @remove.bind(@)) if @model?
+      @setModel(attrs?.model)
       return @
 
     # Should return a jsx template function
@@ -31,6 +30,19 @@ define (require) ->
         that.off(ONCHANGE_EVENT_NAME)
 
     getID: -> @model?.id or @model?.cid or @_id or @_id = require('util').uuid()
+
+    setModel: (model) ->
+      require('assert') not model? or model instanceof require('Backbone').Model, 'Backbone model required'
+
+      # Unbind previous model if there is one
+      @stopListening(@model, 'change destroy') if @model?
+
+      # Set the reference
+      @model = model;
+
+      # Bind events
+      @listenTo(@model, 'change', @trigger.bind(@, @__self.ONCHANGE_EVENT_NAME)) if @model?
+      @listenToOnce(@model, 'destroy', @remove.bind(@)) if @model?
 
     render: ->
       return @_element if @_element

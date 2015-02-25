@@ -4,7 +4,7 @@ define [
   './Destination/AbstractDestination'
   './Label/AbstractLabel'
 ], (_, inherit, assert, AbstractMessageBody, AbstractDestination, AbstractLabel) ->
-  checkDestinations = (destinations) -> _.each destinations, (destination) -> assert destination instanceof AbstractDestination
+  checkDestinations = (destinations) -> _.each destinations, (destination) -> assert destination instanceof AbstractDestination, 'Destination expected'
 
   inherit
     __constructor: ->
@@ -20,19 +20,23 @@ define [
     setBody: (body) ->
       assert body instanceof AbstractMessageBody
       @_body = body
+      return @
 
     getTitle: -> @_title
     setTitle: (title) ->
       assert typeof title is 'string'
       @_title = title
+      return @
 
     to: (destinations...) ->
       checkDestinations destinations
-      @_to.concat destinations
+      @_to = @_to.concat destinations
+      return @
 
     cc: (destinations...) ->
       checkDestinations destinations
-      @_cc.concat destinations
+      @_cc = @_cc.concat destinations
+      return @
 
     # Check message has a label of a given type
     hasLabelByType: (Label) ->

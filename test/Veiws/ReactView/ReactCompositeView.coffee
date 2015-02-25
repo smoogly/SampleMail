@@ -50,6 +50,15 @@ define (require) ->
 
     describe 'render', ->
       beforeEach ->
+        @tag = {}
+        sinon.stub @Successor, '_getTag'
+          .returns @tag
+
+        @className = 'some class name'
+        sinon.stub @Successor, '_getClassname'
+          .returns @className
+
+
         @instance.append @view
         sinon.spy @instance, 'render'
         @instance.render()
@@ -72,9 +81,13 @@ define (require) ->
         expect @fakeReact.createElement.calledOnce
           .to.be true
 
-      it 'should call React.createElement to create a wrapper div', ->
-        expect @fakeReact.createElement.calledWith('div', null)
+      it 'should call React.createElement to create a wrapper element', ->
+        expect @fakeReact.createElement.calledWith(@tag)
           .to.be true
+
+      it 'should set className on the wrapper element', ->
+        expect @fakeReact.createElement.firstCall.args[1]
+          .to.eql className: @className
 
       it 'should not call React.createElement on subsequent calls', ->
         @instance.render()
@@ -97,6 +110,17 @@ define (require) ->
         instance.append(view).render()
         expect @fakeReact.createElement.lastCall.args[2]
           .to.have.property id, renderedElement
+
+      it 'should not attempt to pass child views to React.createElement if there are none', ->
+        # Need new instance, since one from beforeEach was already rendered
+        # and the result is cached
+        instance = new @Successor()
+        sinon.stub instance, 'getChildren'
+          .returns []
+
+        instance.render();
+        expect @fakeReact.createElement.lastCall.args[2]
+          .to.be undefined
 
       it 'should return a React Element', ->
         expect @instance.render()

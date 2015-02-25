@@ -48,6 +48,27 @@ define (require) ->
         expect @composite.append(@view).getChildren()
         	.to.contain @view
 
+    describe 'remove', ->
+      it 'should throw if argument is not an instance of view', ->
+        expect => @composite.remove 'nope'
+        	.to.throwError (err) ->
+            expect err.message
+              .to.be 'AbstractView instance required'
+
+      it 'should throw if argument is not a child', ->
+        expect => @composite.remove new @ViewSuccessor()
+        	.to.throwError (err) ->
+            expect err.message
+            	.to.be 'View is not a child'
+
+      it 'should remove the view from the children list', ->
+        @composite.append @view
+        @composite.remove @view
+
+        expect @composite.getChildren()
+        	.to.not.contain @view
+
+
     describe 'render', ->
       beforeEach ->
         @children = [
@@ -57,14 +78,14 @@ define (require) ->
         ]
 
         @expectedResults = []
-        @children.forEach => (child) ->
+        @children.forEach (child) =>
           renderResult = {}
           @expectedResults.push renderResult
-
           sinon.stub child, 'render'
             .returns renderResult
 
-          @composite.append child
+        sinon.stub @composite, 'getChildren'
+          .returns @children
 
       it 'should return a list', ->
         expect @composite.render()

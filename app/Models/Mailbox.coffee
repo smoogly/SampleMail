@@ -1,5 +1,6 @@
 define (require, exports, module) ->
   assert = require('assert')
+  Destination = require('./Message/Destination/EmailAddress')
 
   module.exports = require('inherit')
     __constructor: (email) ->
@@ -8,12 +9,17 @@ define (require, exports, module) ->
       @_messages = []
       return @
 
-    getEmail: -> @_email
-    isOwnAddress: (address) -> @_email is address
+    getEmail: -> new Destination(@_email)
+    isOwnAddress: (address) -> @getEmail().compare(address)
 
     getFolders: ->
       return @_folders if @_folders
       @_folders = [
-        new (require('./Folder/Inbox'))(@)
+        new (require('./Folder/Inbox'))(@),
         new (require('./Folder/Thrash'))(@)
       ]
+
+    getMessages: -> @_messages
+    addMessage: (message) ->
+      assert message instanceof require('./Message/AbstractMessage')
+      @_messages.push(message)
