@@ -16,7 +16,7 @@ define (require) ->
         sinon.stub @message, 'getRecipients'
           .returns ['whatso@ever.ly']
 
-        @ThrashLabel = require('../../../../../build/app/Models/Message/Label/ThrashLabel')
+        @TrashLabel = require('../../../../../build/app/Models/Message/Label/TrashLabel')
 
       describe 'test', ->
         it 'should throw if argument is not a message', ->
@@ -25,23 +25,23 @@ define (require) ->
               expect err.message
               	.to.be 'Criterion should be tested against a Message'
 
-        it 'should return true if message is directed to own address and not in thrash', ->
+        it 'should return true if message is directed to own address and not in trash', ->
           sinon.stub @mailbox, 'isOwnAddress'
             .returns true
 
           sinon.stub @message, 'hasLabelByType'
-            .withArgs @ThrashLabel
+            .withArgs @TrashLabel
             .returns false
 
           expect @criterion.test @message
             .to.be true
 
-        it 'should return false if message has Thrash label', ->
+        it 'should return false if message has Trash label', ->
           sinon.stub @mailbox, 'isOwnAddress'
             .returns true
 
           sinon.stub @message, 'hasLabelByType'
-            .withArgs @ThrashLabel
+            .withArgs @TrashLabel
             .returns true
 
           expect @criterion.test @message
@@ -52,7 +52,7 @@ define (require) ->
             .returns false
 
           sinon.stub @message, 'hasLabelByType'
-            .withArgs @ThrashLabel
+            .withArgs @TrashLabel
             .returns false
 
           expect @criterion.test @message

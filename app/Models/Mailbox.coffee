@@ -16,7 +16,7 @@ define (require, exports, module) ->
       return @_folders if @_folders
       @_folders = [
         new (require('./Folder/Inbox'))(@),
-        new (require('./Folder/Thrash'))(@)
+        new (require('./Folder/Trash'))(@)
       ]
 
     getMessages: -> @_messages

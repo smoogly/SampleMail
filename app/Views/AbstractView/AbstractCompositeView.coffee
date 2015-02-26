@@ -6,6 +6,7 @@ define (require) ->
     __constructor: () ->
       @__base.apply @, arguments
       @_children = []
+      @_changed = false
       return @
 
     append: (subview) ->
@@ -14,7 +15,10 @@ define (require) ->
       assert @_children.indexOf(subview) is -1, 'Appended view is already to this composite'
 
       @_children.push(subview)
-      subview.once 'destroy', => @remove subview
+      @listenTo subview, 'destroy', => @remove subview
+
+      @setChanged()
+
       return @
 
     remove: (subview) ->
@@ -24,9 +28,22 @@ define (require) ->
       assert index > -1, 'View is not a child'
       @_children.splice(index, 1)
 
+      @setChanged()
+
+      return @_children
+
+    removeAllChildren: ->
+      @_children.forEach (child) => @stopListening(child)
+      @_children = []
+
     getChildren: -> @_children
 
     render: ->
+      @setRendered()
       return require '_'
         .map @getChildren(), (child) ->
           child.render()
+
+    setRendered: -> @_changed = false
+    setChanged: -> @_changed = true
+    isChanged: -> @_changed

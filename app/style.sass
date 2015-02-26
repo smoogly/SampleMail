@@ -1,0 +1,17 @@
+@import "../node_modules/bootstrap-sass/assets/stylesheets/bootstrap"
+
+$commonHSpacer: 1rem
+$commonVSpacer: .3rem
+
+@mixin resetList
+  list-style-type: none
+  padding: 0
+  margin: 0
+
+@mixin inlineBlock($alignment: top)
+  display: inline-block
+  vertical-align: $alignment
+
+@import "Views/Logo/Logo"
+@import "Views/FolderList/FolderList"
+@import "Views/MessageListView/MessageList"

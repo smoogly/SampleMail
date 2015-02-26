@@ -1,11 +1,11 @@
 define (require) ->
   describe 'ReactRootView', ->
     beforeEach ->
-      @Successor = require('inherit') require('../../../../../build/app/Veiws/ReactView/ReactRootView')
+      @Successor = require('inherit') require('../../../../../build/app/Views/ReactView/ReactRootView')
       @instance = new @Successor()
       @instance.el = @el = {}
 
-      @ReactCompositeView = require('../../../../../build/app/Veiws/ReactView/ReactCompositeView')
+      @ReactCompositeView = require('../../../../../build/app/Views/ReactView/ReactCompositeView')
 
       @fakeReact = new (require('../../FakeReact'))()
       sinon.stub @Successor, '_getReact'
@@ -34,7 +34,7 @@ define (require) ->
 
       # Testing for a base method, this seems good enough
       it 'should render child views', ->
-        ReactView = require('inherit') require('../../../../../build/app/Veiws/ReactView/AbstractReactView')
+        ReactView = require('inherit') require('../../../../../build/app/Views/ReactView/AbstractReactView')
         view = new ReactView()
         sinon.stub view, 'render'
 

@@ -6,6 +6,7 @@ define ['inherit', 'assert', '../../../Error/NotImplementedError'], (inherit, as
       return @
 
     toHTML: -> throw new NotImplementedError()
+    getFirstLine: -> throw new NotImplementedError()
   ,
     ###*
     # Gets the content type to write into the email

@@ -9,7 +9,7 @@ var reqConfig = { //Not inlined so that tests can update it
 
         'Backbone': '../node_modules/backbone/backbone-min',
         'inherit': '../node_modules/inherit/lib/inherit',
-        'React': '../node_modules/react/dist/react',
+        'React': '../node_modules/react/dist/react-with-addons',
         '_': '../node_modules/lodash/index',
 
         '$': 'http://yastatic.net/jquery/2.1.3/jquery.min',

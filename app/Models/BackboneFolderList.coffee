@@ -1,7 +1,6 @@
 define (require) ->
   assert = require('assert')
   Mailbox = require('./Mailbox')
-  AbstractFolder = require('./Folder/AbstractFolder')
   BackboneFolderModel = require('./Folder/BackboneFolderModel')
 
   require('inherit') require('./BackboneProxyModel'),
@@ -30,6 +29,9 @@ define (require) ->
       @_currentFolder = @_folders[@getModel().getFolders()[0].getName()];
 
     setCurrentFolder: (folder) ->
-      assert folder instanceof AbstractFolder
+      assert folder instanceof BackboneFolderModel, 'Backbone folder model expected'
       @_currentFolder = folder;
 
+    getFolderByName: (folderName) ->
+      assert folderName of @_folders, "Unknown folder #{ folderName }"
+      @_folders[folderName]

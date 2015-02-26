@@ -3,8 +3,8 @@ define [
   '../Mailbox'
   './AbstractFolder'
   './Criterion/AbstractCriterion'
-  '../Message/Label/ThrashLabel'
-], (inherit, assert, Mailbox, AbstractFolder, AbstractCriterion, ThrashLabel) ->
+  '../Message/Label/TrashLabel'
+], (inherit, assert, Mailbox, AbstractFolder, AbstractCriterion, TrashLabel) ->
 
   inherit AbstractFolder,
     __constructor: (mailbox) ->
@@ -20,4 +20,4 @@ define [
       _test: (message) ->
         recipients = message.getRecipients()
         toMe = recipients.length > 0 and recipients.every(@_mailbox.isOwnAddress.bind(@_mailbox))
-        return toMe and not message.hasLabelByType(ThrashLabel)
+        return toMe and not message.hasLabelByType(TrashLabel)

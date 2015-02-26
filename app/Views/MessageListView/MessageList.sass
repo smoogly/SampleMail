@@ -1,0 +1,22 @@
+$messageListTitleWidth: 10rem
+
+.message-list
+  @include resetList()
+
+  &-item
+    $border: 1px solid #ccc
+    padding: $commonVSpacer 0
+    border-bottom: $border
+    cursor: pointer
+
+    &:first-child
+      border-top: $border
+
+  &-title
+    @include inlineBlock()
+    @include text-overflow()
+    width: $messageListTitleWidth
+
+  &-firstline
+    margin-left: $commonHSpacer
+    @include inlineBlock()

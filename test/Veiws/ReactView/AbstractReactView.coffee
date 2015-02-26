@@ -1,7 +1,7 @@
 define (require) ->
   describe 'AbstractReactView', ->
     beforeEach ->
-      @Successor = require('inherit') require('../../../../../build/app/Veiws/ReactView/AbstractReactView')
+      @Successor = require('inherit') require('../../../../../build/app/Views/ReactView/AbstractReactView')
 
       @id = {id: 1}
       @cid = {cid: 2}
@@ -31,7 +31,7 @@ define (require) ->
     describe 'Constructor', ->
       it 'should create an instance of AbstractView', ->
         expect @instance
-        .to.be.a require('../../../../../build/app/Veiws/AbstractView/AbstractView')
+        .to.be.a require('../../../../../build/app/Views/AbstractView/AbstractView')
 
     describe 'getID', ->
       it 'should return model.id if it exists', ->

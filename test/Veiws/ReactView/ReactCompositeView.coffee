@@ -1,10 +1,10 @@
 define (require) ->
   describe 'ReactCompositeView', ->
     beforeEach ->
-      @Successor = require('inherit') require('../../../../../build/app/Veiws/ReactView/ReactCompositeView')
+      @Successor = require('inherit') require('../../../../../build/app/Views/ReactView/ReactCompositeView')
       @instance = new @Successor()
 
-      @AbstractReactView = require('inherit') require('../../../../../build/app/Veiws/ReactView/AbstractReactView')
+      @AbstractReactView = require('inherit') require('../../../../../build/app/Views/ReactView/AbstractReactView')
       @ReactView = require('inherit') @AbstractReactView
       @view = new @ReactView()
       sinon.stub @view, 'render'
@@ -13,12 +13,12 @@ define (require) ->
       sinon.stub @Successor, '_getReact'
         .returns @fakeReact
 
-      @RootView = require('../../../../../build/app/Veiws/ReactView/ReactRootView')
+      @RootView = require('../../../../../build/app/Views/ReactView/ReactRootView')
 
     describe 'Constructor', ->
       it 'should create an instance of AbstractView', ->
         expect @instance
-          .to.be.a require('../../../../../build/app/Veiws/AbstractView/AbstractView')
+          .to.be.a require('../../../../../build/app/Views/AbstractView/AbstractView')
 
     describe 'append', ->
       it 'should throw if argument is not a view', ->
@@ -50,14 +50,9 @@ define (require) ->
 
     describe 'render', ->
       beforeEach ->
-        @tag = {}
-        sinon.stub @Successor, '_getTag'
-          .returns @tag
-
-        @className = 'some class name'
-        sinon.stub @Successor, '_getClassname'
-          .returns @className
-
+        @fakeClass = {}
+        sinon.stub @instance, '_getClass'
+          .returns @fakeClass
 
         @instance.append @view
         sinon.spy @instance, 'render'
@@ -81,13 +76,9 @@ define (require) ->
         expect @fakeReact.createElement.calledOnce
           .to.be true
 
-      it 'should call React.createElement to create a wrapper element', ->
-        expect @fakeReact.createElement.calledWith(@tag)
+      it 'should call React.createElement with a result of _createClass', ->
+        expect @fakeReact.createElement.calledWith(@fakeClass)
           .to.be true
-
-      it 'should set className on the wrapper element', ->
-        expect @fakeReact.createElement.firstCall.args[1]
-          .to.eql className: @className
 
       it 'should not call React.createElement on subsequent calls', ->
         @instance.render()
@@ -96,32 +87,6 @@ define (require) ->
         expect @fakeReact.createElement.calledOnce
         	.to.be true
 
-      it 'should call React.createElement with a keyed hash of child views', ->
-        id = 'Tests are ducking awesome!'
-        view = new @ReactView()
-        sinon.stub view, 'getID'
-          .returns id
-
-        renderedElement = {}
-        sinon.stub view, 'render'
-          .returns renderedElement
-
-        instance = new @Successor()
-        instance.append(view).render()
-        expect @fakeReact.createElement.lastCall.args[2]
-          .to.have.property id, renderedElement
-
-      it 'should not attempt to pass child views to React.createElement if there are none', ->
-        # Need new instance, since one from beforeEach was already rendered
-        # and the result is cached
-        instance = new @Successor()
-        sinon.stub instance, 'getChildren'
-          .returns []
-
-        instance.render();
-        expect @fakeReact.createElement.lastCall.args[2]
-          .to.be undefined
-
       it 'should return a React Element', ->
         expect @instance.render()
           .to.be.a @fakeReact.types.Element
@@ -129,3 +94,50 @@ define (require) ->
       it 'should return same React Element on subsequent calls', ->
         expect @instance.render()
           .to.be @instance.render()
+
+    describe '_getClassHooks', ->
+      describe 'render', ->
+        beforeEach ->
+          @tag = {}
+          sinon.stub @Successor, '_getTag'
+            .returns @tag
+
+          @className = 'some class name'
+          sinon.stub @Successor, '_getClassname'
+            .returns @className
+
+          @instance.append @view
+          @instance._getClassHooks().render()
+
+        it 'should call React.createElement to create a wrapper element', ->
+          expect @fakeReact.createElement.calledWith(@tag)
+
+        it 'should set className on the wrapper element', ->
+          expect @fakeReact.createElement.firstCall.args[1]
+            .to.eql className: @className
+
+        it 'should call React.createElement with a keyed hash of child views', ->
+          id = 'Tests are ducking awesome!'
+          view = new @ReactView()
+          sinon.stub view, 'getID'
+            .returns id
+
+          renderedElement = {}
+          sinon.stub view, 'render'
+            .returns renderedElement
+
+          instance = new @Successor()
+          instance.append(view)._getClassHooks().render()
+          expect @fakeReact.createElement.lastCall.args[2]
+            .to.have.property id, renderedElement
+
+        it 'should not attempt to pass child views to React.createElement if there are none', ->
+          # Need new instance, since one from beforeEach was already rendered
+          # and the result is cached
+          instance = new @Successor()
+          sinon.stub instance, 'getChildren'
+            .returns []
+
+          instance._getClassHooks().render();
+          expect @fakeReact.createElement.lastCall.args[2]
+            .to.be undefined

@@ -30,11 +30,9 @@ NPMCACHE?=n
 MIN?=y
 
 ifeq ($(MIN),y)
-	MINIMIZE_JS=--minimize=true
-	MINIMIZE_CSS=--minimize=true
+	MINIMIZE_CSS=--output-style=compressed
 else
-	MINIMIZE_JS=--minimize=false
-	MINIMIZE_CSS=--minimize=false
+	MINIMIZE_CSS=--output-style=expanded
 endif
 
 
@@ -44,7 +42,7 @@ endif
 # Targets
 #----------------------------------------------------
 
-all: coffee jsx node_modules
+all: coffee jsx node_modules $(BUILD_DIR)/app/style.css
 
 coffee: $(COFFEE_BUILT)
 
@@ -57,7 +55,10 @@ clean:
 clean-all: clean
 	rm -rf node_modules
 
-prepare-tests: all $(TESTS_BUILT)
+prepare-tests: coffee jsx $(TESTS_BUILT) node_modules
+
+$(BUILD_DIR)/app/style.css: node_modules ./app/style.sass
+	$(NPM_BIN)/node-sass $(MINIMIZE_CSS) ./app/style.sass ./build/app/style.css
 
 
 node_modules: package.json
