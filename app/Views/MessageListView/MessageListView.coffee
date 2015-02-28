@@ -1,13 +1,5 @@
 define (require) ->
-  MessageListItemView = require('inherit') require('../ReactView/ReactViewFactory')(require('./MessageListItemTemplate')),
-    _getClassHooks: ->
-      that = @
-      require('_').extend @__base.apply(@, arguments),
-        selectMessage: -> # Not used currently, navigation is via links
-          that.trigger MessageListItemView.OPEN_MESSAGE_EVENT, that.model.getModel().getID()
-
-  ,
-    OPEN_MESSAGE_EVENT: 'message-item-open'
+  MessageListItemView = require('inherit') require('../ReactView/ReactViewFactory')(require('./MessageListItemTemplate'))
 
   MessageListItem = require('inherit') require('../../Models/BackboneProxyModel'),
     __constructor: ->
@@ -31,16 +23,9 @@ define (require) ->
       @removeAllChildren()
 
       @model.getModel().getMessages().forEach (message) =>
-        messageItemView = new MessageListItemView(model: new MessageListItem(message))
-
-        @listenTo messageItemView, MessageListItemView.OPEN_MESSAGE_EVENT, (messageID) =>
-          @trigger @__self.OPEN_MESSAGE_EVENT, messageID
-
-        @append(messageItemView)
+        @append(new MessageListItemView(model: new MessageListItem(message)))
 
       @__base.apply(@, arguments)
   ,
     _getClassname: -> 'message-list col-xs-10'
     _getTag: -> 'ul'
-
-    OPEN_MESSAGE_EVENT: 'openmessage'

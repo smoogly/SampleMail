@@ -42,8 +42,6 @@ define (require) ->
       @_messageListView = new MessageListView
         model: new MessageList @_mailbox.getFolders()[0]
 
-      @_messageListView.on MessageListView.OPEN_MESSAGE_EVENT, @_onMessageOpen.bind(@)
-
       # Single message view
       @_singleMessageView = new SingleMessageView()
       @_singleMessageView.on SingleMessageView.TRASHED_EVENT, =>
@@ -138,13 +136,6 @@ define (require) ->
           .getFolder()
       ))
       @_messageListView.trigger('change')
-
-    _onMessageOpen: (messageID) ->
-      a = document.createElement('a')
-      a.href = window.location.href
-      a.hash = 'message/' + messageID
-
-      window.open(a.href)
 
     _showFolders: ->
       @remove @_singleMessageView if @isChild @_singleMessageView
