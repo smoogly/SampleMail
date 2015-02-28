@@ -27,3 +27,5 @@ define (require) ->
   ,
     _getClassname: -> 'message-list col-xs-10'
     _getTag: -> 'ul'
+
+    OPEN_MESSAGE_EVENT: 'openmessage'

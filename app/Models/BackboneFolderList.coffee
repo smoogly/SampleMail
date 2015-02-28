@@ -33,5 +33,12 @@ define (require) ->
       @_currentFolder = folder;
 
     getFolderByName: (folderName) ->
-      assert folderName of @_folders, "Unknown folder #{ folderName }"
+      assert folderName of @_folders, "Unknown folder #{ folderName }", @__self.UnknownFolderError
       @_folders[folderName]
+
+  ,
+    CHANGE_FOLDER_EVENT: 'changefolder'
+
+    UnknownFolderError: require('inherit') require('assert').AssertionError,
+      name: 'UnknownFolderError'
+

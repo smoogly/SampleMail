@@ -5,5 +5,9 @@ define (require) ->
     __constructor: (@message) ->
     toString: -> "#{ @name }: #{ @message }"
 
-  (assertion, message) ->
-    throw new AssertionError(message or 'Falsey assertion') if not assertion
+  assert = (assertion, message, Error) ->
+    Error = Error or AssertionError
+    throw new Error(message or 'Falsey assertion') if not assertion
+
+  assert.AssertionError = AssertionError
+  return assert
