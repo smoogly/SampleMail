@@ -3,7 +3,7 @@ define (require) ->
     _getClassHooks: ->
       that = @
       require('_').extend @__base.apply(@, arguments),
-        selectMessage: ->
+        selectMessage: -> # Not used currently, navigation is via links
           that.trigger MessageListItemView.OPEN_MESSAGE_EVENT, that.model.getModel().getID()
 
   ,
@@ -15,6 +15,7 @@ define (require) ->
       @id = @getModel().getID()
 
       @set
+        id: @getModel().getID()
         title: @getModel().getTitle()
         firstline: @getModel().getBody().getFirstLine()
 

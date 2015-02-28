@@ -7,10 +7,13 @@ $messageListTitleWidth: 10rem
     $border: 1px solid #ccc
     padding: $commonVSpacer 0
     border-bottom: $border
-    cursor: pointer
 
     &:first-child
       border-top: $border
+
+  &-link
+    @include inlineBlock()
+    width: 100%
 
   &-title
     @include inlineBlock()
