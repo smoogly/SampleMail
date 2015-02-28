@@ -135,7 +135,17 @@ define (require) ->
           .getCurrentFolder()
           .getFolder()
       ))
-      @_messageListView.trigger('change')
+
+      #TODO: fix composite rendering bug
+      # There's an issue I don't understand fully as of now
+      # @_messageListView contents don't get re-rendered on model change
+      # After there was a append-remove-append operation
+      # To reproduce: open a folder, then open a message,
+      #               then open inbox by clicking a logo,
+      #               click a logo again and try navigating to another folder
+      #               Result: messages related to inbox are shown
+      #               Expected result: messages from a current folder are shown
+      @render() #This is a quick fix
 
     _showFolders: ->
       @remove @_singleMessageView if @isChild @_singleMessageView
