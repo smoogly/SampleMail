@@ -46,6 +46,8 @@ define (require) ->
 
       # Single message view
       @_singleMessageView = new SingleMessageView()
+      @_singleMessageView.on SingleMessageView.TRASHED_EVENT, =>
+        @_router.navigate '', trigger: yes
 
       #Views
       Row = require('inherit') require('./Views/ReactView/ReactCompositeView'), {},
@@ -65,7 +67,7 @@ define (require) ->
       @_initRouter()
 
       logo.on Logo.CLICKED_EVENT, =>
-        @_router.navigate '', trigger: true
+        @_router.navigate '', trigger: yes
 
       return @
 
@@ -158,7 +160,7 @@ define (require) ->
         message = @_mailbox.getMessageByID(messageID)
       catch error
         throw error unless error instanceof Mailbox.UnknownMessageError
-        return @_router.navigate('', trigger: true)
+        return @_router.navigate('', trigger: yes)
 
       @remove @_messageListModeView if @isChild @_messageListModeView
       @append @_singleMessageView unless @isChild @_singleMessageView

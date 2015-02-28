@@ -8,6 +8,7 @@ NPM_BIN=$(CURDIR)/node_modules/.bin
 #----------------------------------------------------
 BUILD_DIR=build
 TEST_BUILD_DIR=test/_build
+PUBLIC_ASSETS_DIR=$(BUILD_DIR)/public
 
 #Build coffee files into build/app tree
 COFFEE=$(shell find ./app -type f | egrep '\.coffee$$')
@@ -44,7 +45,7 @@ endif
 # Targets
 #----------------------------------------------------
 
-all: coffee jsx node_modules $(BUILD_DIR)/app/style.css
+all: coffee jsx node_modules $(BUILD_DIR)/app/style.css $(PUBLIC_ASSETS_DIR)/fonts
 
 coffee: $(COFFEE_BUILT)
 
@@ -53,6 +54,7 @@ jsx: $(JSX_BUILT)
 clean:
 	rm -rf $(BUILD_DIR)/app
 	rm -rf $(TEST_BUILD_DIR)
+	rm -rf $(PUBLIC_ASSETS_DIR)
 
 clean-all: clean
 	rm -rf node_modules
@@ -61,6 +63,10 @@ prepare-tests: coffee jsx $(TESTS_BUILT) node_modules
 
 $(BUILD_DIR)/app/style.css: node_modules $(STYLES)
 	$(NPM_BIN)/node-sass $(MINIMIZE_CSS) ./app/style.sass ./build/app/style.css
+
+$(PUBLIC_ASSETS_DIR)/fonts: node_modules
+	mkdir -p $(PUBLIC_ASSETS_DIR)
+	cp -r ./node_modules/font-awesome/fonts $(PUBLIC_ASSETS_DIR)/fonts
 
 
 node_modules: package.json

@@ -35,3 +35,4 @@ node_modules
 
 test/_build
 build/app
+build/public

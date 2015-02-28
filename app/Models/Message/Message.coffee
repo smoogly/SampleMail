@@ -1,4 +1,4 @@
-define ['assert', 'inherit', './AbstractMessage'], (assert, inherit, AbstractMessage) ->
+define ['assert', 'inherit', './AbstractMessage', './Label/TrashLabel'], (assert, inherit, AbstractMessage, TrashLabel) ->
   inherit AbstractMessage,
     getID: -> # This should be actually set by the backend, but there is none
       return @_id if @_id
@@ -7,4 +7,8 @@ define ['assert', 'inherit', './AbstractMessage'], (assert, inherit, AbstractMes
     setID: (id) ->
       assert id and typeof id is 'string', 'Id should be a string'
       @_id = id
+      return @
+
+    toTrash: ->
+      @addLabel(new TrashLabel()) unless @hasLabelByType(TrashLabel)
       return @
