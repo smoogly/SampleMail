@@ -10,7 +10,7 @@ define [
     __constructor: (mailbox) ->
       @__base mailbox, new @__self.Criterion(mailbox)
 
-    getName: -> 'Inbox'
+    getName: -> 'Sent'
   ,
     Criterion: inherit AbstractCriterion,
       __constructor: (mailbox) ->
@@ -18,6 +18,5 @@ define [
         return @__base.apply(@, arguments)
 
       _test: (message) ->
-        recipients = message.getRecipients()
-        toMe = recipients.length > 0 and recipients.some(@_mailbox.isOwnAddress.bind(@_mailbox))
-        return toMe and not message.hasLabelByType(TrashLabel)
+        return @_mailbox.isOwnAddress(message.getFrom()) and
+            not message.hasLabelByType(TrashLabel)

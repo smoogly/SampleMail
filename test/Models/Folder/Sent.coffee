@@ -1,7 +1,7 @@
 define (require) ->
-  describe 'Inbox folder', ->
+  describe 'Sent folder', ->
     beforeEach ->
-      @Inbox = require('../../../../../build/app/Models/Folder/Inbox')
+      @Inbox = require('../../../../../build/app/Models/Folder/Sent')
       @Mailbox = require('../../../../../build/app/Models/Mailbox')
       @mailbox = new @Mailbox('whatever')
 
@@ -13,8 +13,9 @@ define (require) ->
         @Message = require('../../../../../build/app/Models/Message/Message')
         @message = new @Message()
 
-        sinon.stub @message, 'getRecipients'
-          .returns ['whatso@ever.ly']
+        @from = 'arseny@smoogly.ru'
+        sinon.stub @message, 'getFrom'
+          .returns @from
 
         @TrashLabel = require('../../../../../build/app/Models/Message/Label/TrashLabel')
 
@@ -25,34 +26,21 @@ define (require) ->
               expect err.message
               	.to.be 'Criterion should be tested against a Message'
 
-        it 'should return true if message is directed to own address and not in trash', ->
+        it 'should return true if message author is a mailbox owner and message is not in trash', ->
           sinon.stub @mailbox, 'isOwnAddress'
+            .withArgs @from
             .returns true
 
           sinon.stub @message, 'hasLabelByType'
             .withArgs @TrashLabel
             .returns false
-
-          expect @criterion.test @message
-            .to.be true
-
-        it 'should return true if message has own address among other recipients', ->
-          sinon.stub @mailbox, 'isOwnAddress'
-            .returns false
-            .onFirstCall().returns true
-
-          sinon.stub @message, 'hasLabelByType'
-            .withArgs @TrashLabel
-            .returns false
-
-          #contents do not really matter, the number does
-          @message.getRecipients.returns ['one', 'two', 'three']
 
           expect @criterion.test @message
             .to.be true
 
         it 'should return false if message has Trash label', ->
           sinon.stub @mailbox, 'isOwnAddress'
+            .withArgs @from
             .returns true
 
           sinon.stub @message, 'hasLabelByType'
@@ -61,19 +49,3 @@ define (require) ->
 
           expect @criterion.test @message
           	.to.be false
-
-        it 'should return false if message is not directed to own address', ->
-          sinon.stub @mailbox, 'isOwnAddress'
-            .returns false
-
-          sinon.stub @message, 'hasLabelByType'
-            .withArgs @TrashLabel
-            .returns false
-
-          expect @criterion.test @message
-          	.to.be false
-
-        it 'should return false if message has no recipients', ->
-          @message.getRecipients.returns []
-          expect @criterion.test @message
-            .to.be false

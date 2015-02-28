@@ -13,8 +13,9 @@ define [
       @_to = []
       @_cc = []
       @_bcc = []
+      @_from = null;
 
-      return @ #Otherwise there would be return @_bcc = [] compiled :/
+      return @
 
     getBody: -> @_body
     setBody: (body) ->
@@ -37,6 +38,15 @@ define [
       checkDestinations destinations
       @_cc = @_cc.concat destinations
       return @
+
+    from: (destinatioin) ->
+      checkDestinations([destinatioin])
+      @_from = destinatioin
+      return @
+
+    getFrom: ->
+      assert @_from isnt null, 'From field has never been defined'
+      return @_from
 
     # Check message has a label of a given type
     hasLabelByType: (Label) ->

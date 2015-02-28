@@ -16,10 +16,11 @@ define (require, exports, module) ->
       return @_folders if @_folders
       @_folders = [
         new (require('./Folder/Inbox'))(@),
-        new (require('./Folder/Trash'))(@)
+        new (require('./Folder/Trash'))(@),
+        new (require('./Folder/Sent'))(@)
       ]
 
     getMessages: -> @_messages
     addMessage: (message) ->
-      assert message instanceof require('./Message/AbstractMessage')
+      assert message instanceof require('./Message/AbstractMessage'), 'Message expected'
       @_messages.push(message)
