@@ -60,14 +60,10 @@ define (require) ->
 
       # Append logo
       Logo = require('./Views/Logo/Logo')
-      logo = new Logo()
-      @append logo
+      @append new Logo()
 
       # Fire!
       @_initRouter()
-
-      logo.on Logo.CLICKED_EVENT, =>
-        @_router.navigate '', trigger: yes
 
       return @
 
@@ -138,8 +134,8 @@ define (require) ->
 
       @_messageListView.setModel(new MessageList(
         @_folderList
-        .getCurrentFolder()
-        .getFolder()
+          .getCurrentFolder()
+          .getFolder()
       ))
       @_messageListView.trigger('change')
 
