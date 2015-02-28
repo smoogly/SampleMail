@@ -130,6 +130,41 @@ define (require) ->
         expect @composite.setRendered.calledOnce
         	.to.be true
 
+      it 'should call isChanged once', ->
+        sinon.stub @composite, 'isChanged'
+        @composite.render()
+
+        expect @composite.isChanged.calledOnce
+        	.to.be true
+
+      it 'should call isChanged before setRendered', ->
+        sinon.stub @composite, 'setRendered'
+        sinon.stub @composite, 'isChanged'
+        @composite.render()
+        expect @composite.setRendered.calledAfter @composite.isChanged
+          .to.be true
+
+      it 'should emit a change event if isChanged returns true', ->
+        sinon.stub @composite, 'trigger'
+        sinon.stub @composite, 'isChanged'
+          .returns true
+
+        @composite.render()
+        expect @composite.trigger.calledOnce
+        	.to.be true
+
+        expect @composite.trigger.calledWithExactly(@CompositeSuccessor.ONCHANGE_EVENT_NAME)
+        	.to.be true
+
+      it 'should not emit if isChanged returns false', ->
+        sinon.stub @composite, 'trigger'
+        sinon.stub @composite, 'isChanged'
+          .returns false
+
+        @composite.render()
+        expect @composite.trigger.called
+          .to.be false
+
     describe 'isChanged', ->
       it 'should return false for a new Composite', ->
         expect @composite.isChanged()

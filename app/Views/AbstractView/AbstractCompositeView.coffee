@@ -41,6 +41,8 @@ define (require) ->
       return @getChildren().indexOf(subview) > -1
 
     render: ->
+      @trigger(@__self.ONCHANGE_EVENT_NAME) if @isChanged()
+
       @setRendered()
       return require '_'
         .map @getChildren(), (child) ->
