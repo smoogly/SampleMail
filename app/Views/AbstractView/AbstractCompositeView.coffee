@@ -31,8 +31,8 @@ define (require) ->
       return @_children
 
     removeAllChildren: ->
-      @_children.forEach (child) => @stopListening(child)
-      @_children = []
+      @remove(@_children[0]) while @_children.length > 0
+      return @
 
     getChildren: -> @_children
 
