@@ -16,6 +16,8 @@ COFFEE_BUILT=$(foreach cfile, $(COFFEE), $(BUILD_DIR)/$(cfile:.coffee=.js))
 TESTS=$(shell find ./test -type f | egrep '\.coffee$$')
 TESTS_BUILT=$(foreach cfile, $(TESTS), $(TEST_BUILD_DIR)/$(cfile:.coffee=.js))
 
+STYLES=$(shell find ./app -type f | egrep '\.sass$$')
+
 
 #Build jsx files into build/app tree
 JSX=$(shell find ./app -type f | egrep '\.jsx$$')
@@ -57,7 +59,7 @@ clean-all: clean
 
 prepare-tests: coffee jsx $(TESTS_BUILT) node_modules
 
-$(BUILD_DIR)/app/style.css: node_modules ./app/style.sass
+$(BUILD_DIR)/app/style.css: node_modules $(STYLES)
 	$(NPM_BIN)/node-sass $(MINIMIZE_CSS) ./app/style.sass ./build/app/style.css
 
 

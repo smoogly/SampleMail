@@ -32,14 +32,36 @@ define (require) ->
         expect @fakeReact.render.firstCall.args[1]
         	.to.be @el
 
-      # Testing for a base method, this seems good enough
-      it 'should render child views', ->
-        ReactView = require('inherit') require('../../../../../build/app/Views/ReactView/AbstractReactView')
-        view = new ReactView()
-        sinon.stub view, 'render'
-
-        @instance.append(view).render()
-        expect view.render.calledOnce
+      it 'should not call React.render on subsequent calls', ->
+        #We're already attached to the dom with given children, no need to reattach
+        @instance.render()
+        @instance.render()
+        @instance.render()
+        expect @fakeReact.render.calledOnce
         	.to.be true
 
+      it 'should emit a change event if children have changed', ->
+        sinon.stub @instance, 'isChanged'
+          .returns true
 
+        sinon.stub @instance, 'trigger'
+
+        @instance.render()
+
+        expect @instance.trigger.calledOnce
+          .to.be true
+
+        expect @instance.trigger.calledWithExactly(@Successor.ONCHANGE_EVENT_NAME)
+
+    describe '_getClassHooks', ->
+      beforeEach ->
+        @FakeReactClass = require('inherit') @instance._getClassHooks()
+
+        @fakeReactClass = new @FakeReactClass()
+        @fakeReactClass.forceUpdate = sinon.stub()
+
+      describe 'onChange', ->
+        it 'should call foceUpdate', ->
+          @fakeReactClass.onChange()
+          expect @fakeReactClass.forceUpdate.calledOnce
+            .to.be true

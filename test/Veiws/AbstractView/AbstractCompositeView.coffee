@@ -33,7 +33,7 @@ define (require) ->
         expect => @composite.append @view
         	.to.throwError (err) ->
             expect err.message
-            	.to.be 'Appended view is already to this composite'
+            	.to.be 'Appended view is already a child of this composite'
 
 
       it 'should not throw if argument is an instance of Composite View', ->

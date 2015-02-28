@@ -24,3 +24,14 @@ define (require, exports, module) ->
     addMessage: (message) ->
       assert message instanceof require('./Message/AbstractMessage'), 'Message expected'
       @_messages.push(message)
+
+    getMessageByID: (id) ->
+      assert id and typeof id is 'string', 'Message id should be a string'
+      message = require('_').find @getMessages(), (message) -> message.getID() is id
+
+      throw new @__self.UnknownMessageError unless message
+      return message
+
+  ,
+      UnknownMessageError: require('inherit') assert.AssertionError,
+        name: 'UnknownMessageError'

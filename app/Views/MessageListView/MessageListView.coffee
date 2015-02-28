@@ -1,5 +1,14 @@
 define (require) ->
-  MessageListItemView = require('../ReactView/ReactViewFactory') require('./MessageListItemTemplate')
+  MessageListItemView = require('inherit') require('../ReactView/ReactViewFactory')(require('./MessageListItemTemplate')),
+    _getClassHooks: ->
+      that = @
+      require('_').extend @__base.apply(@, arguments),
+        selectMessage: ->
+          that.trigger MessageListItemView.OPEN_MESSAGE_EVENT, that.model.getModel().getID()
+
+  ,
+    OPEN_MESSAGE_EVENT: 'message-item-open'
+
   MessageListItem = require('inherit') require('../../Models/BackboneProxyModel'),
     __constructor: ->
       @__base.apply(@, arguments)
@@ -21,7 +30,12 @@ define (require) ->
       @removeAllChildren()
 
       @model.getModel().getMessages().forEach (message) =>
-        @append(new MessageListItemView(model: new MessageListItem(message)))
+        messageItemView = new MessageListItemView(model: new MessageListItem(message))
+
+        @listenTo messageItemView, MessageListItemView.OPEN_MESSAGE_EVENT, (messageID) =>
+          @trigger @__self.OPEN_MESSAGE_EVENT, messageID
+
+        @append(messageItemView)
 
       @__base.apply(@, arguments)
   ,

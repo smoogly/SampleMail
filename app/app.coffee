@@ -11,26 +11,61 @@ define (require) ->
   MessageList = require('./Models/BackboneProxyModel')
   MessageListView = require('./Views/MessageListView/MessageListView')
 
+  SingleMessage = require('inherit') require('./Models/BackboneProxyModel'),
+    __constructor: ->
+      @__base.apply(@, arguments)
+      @save()
+
+    save: ->
+      @set
+        title: @getModel().getTitle()
+        body: @getModel().getBody().toHTML()
+
+  SingleMessageView = require('./Views/SingleMessage/SingleMessage')
+
   SampleMail = require('inherit') require('./Views/ReactView/ReactRootView'),
     __constructor: ->
       @__base.apply(@, arguments)
 
+      # Mailbox
       @_mailbox = new Mailbox('arseny@smoogly.ru')
       @_fakePopulateMailbox()
 
+      #Folder list
       @_folderList = new FolderList(@_mailbox)
       @_folderListView = new FolderListView
         model: @_folderList
 
       @_folderList.on FolderList.CHANGE_FOLDER_EVENT, @_onCurrentFolderChange.bind(@)
 
+      # Message list
       @_messageListView = new MessageListView
         model: new MessageList @_mailbox.getFolders()[0]
 
+      @_messageListView.on MessageListView.OPEN_MESSAGE_EVENT, @_onMessageOpen.bind(@)
+
+      # Single message view
+      @_singleMessageView = new SingleMessageView()
+
+      #Views
+      Row = require('inherit') require('./Views/ReactView/ReactCompositeView'), {},
+        _getClassname: -> 'row'
+
+      @_messageListModeView = new Row()
+        .append @_folderListView
+        .append @_messageListView
 
 
+      # Append logo
+      Logo = require('./Views/Logo/Logo')
+      logo = new Logo()
+      @append logo
+
+      # Fire!
       @_initRouter()
-      @_appendViews()
+
+      logo.on Logo.CLICKED_EVENT, =>
+        @_router.navigate '', trigger: true
 
       return @
 
@@ -42,6 +77,7 @@ define (require) ->
           .setTitle('It works!')
           .to(@_mailbox.getEmail())
           .from(new Destination('wherever'))
+          .setID('itworks')
 
         new Message()
           .setBody(new MessageBody(
@@ -58,6 +94,7 @@ define (require) ->
           .setTitle('Some long-ass title you\'ve got here, haven\'t you?')
           .to(@_mailbox.getEmail())
           .from(new Destination('lorem@lipsum.org'))
+          .setID('longone')
 
 
         #Trash
@@ -67,6 +104,7 @@ define (require) ->
           .to(@_mailbox.getEmail())
           .addLabel(new TrashLabel())
           .from(new Destination('whatever@mailforspam.com'))
+          .setID('spam')
 
         #Sent
         new Message()
@@ -80,6 +118,7 @@ define (require) ->
           ))
           .to(new Destination('SteveBallmer@microsoft.com'))
           .from(@_mailbox.getEmail())
+          .setID('sent')
 
         #No drafts
       ]
@@ -102,25 +141,45 @@ define (require) ->
       ))
       @_messageListView.trigger('change')
 
-    _appendViews: ->
-      Row = require('inherit') require('./Views/ReactView/ReactCompositeView'), {},
-        _getClassname: -> 'row'
+    _onMessageOpen: (messageID) ->
+      a = document.createElement('a')
+      a.href = window.location.href
+      a.hash = 'message/' + messageID
 
-      @
-        .append new (require('./Views/Logo/Logo'))()
-        .append new Row()
-          .append @_folderListView
-          .append @_messageListView
+      window.open(a.href)
+
+    _showFolders: ->
+      @remove @_singleMessageView if @isChild @_singleMessageView
+      @append @_messageListModeView unless @isChild @_messageListModeView
+      @render()
+
+    _showMessage: (messageID) ->
+      try
+        message = @_mailbox.getMessageByID(messageID)
+      catch error
+        throw error unless error instanceof Mailbox.UnknownMessageError
+        return @_router.navigate('', trigger: true)
+
+      @remove @_messageListModeView if @isChild @_messageListModeView
+      @append @_singleMessageView unless @isChild @_singleMessageView
+      @_singleMessageView.setModel(new SingleMessage(message))
+
+      @render()
 
     _initRouter: ->
       Router = require('inherit') require('Backbone').Router,
         routes:
-          ':folder': 'folder'
           'message/:id': 'message'
+          ':folder': 'folder'
+          '': 'folder' # Entry route
 
       @_router = new Router()
       @_router.on 'route:folder', (folderName) =>
-        @_onCurrentFolderChange(folderName)
+        @_onCurrentFolderChange(folderName or 'Inbox')
+        @_showFolders()
+
+      @_router.on 'route:message', (messageID) =>
+        @_showMessage(messageID)
 
       require('Backbone').history.start()
 

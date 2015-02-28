@@ -10,9 +10,8 @@ define (require) ->
       return @
 
     append: (subview) ->
-      assert subview instanceof AbstractView, 'AbstractView instance required'
+      assert not @isChild(subview), 'Appended view is already a child of this composite'
       assert subview isnt @, 'Can not append Composite View to itself'
-      assert @_children.indexOf(subview) is -1, 'Appended view is already to this composite'
 
       @_children.push(subview)
       @listenTo subview, 'destroy', => @remove subview
@@ -23,10 +22,9 @@ define (require) ->
 
     remove: (subview) ->
       assert subview instanceof AbstractView, 'AbstractView instance required'
-      index = @getChildren().indexOf(subview)
+      assert @isChild(subview), 'View is not a child'
 
-      assert index > -1, 'View is not a child'
-      @_children.splice(index, 1)
+      @_children.splice(@getChildren().indexOf(subview), 1)
 
       @setChanged()
 
@@ -37,6 +35,10 @@ define (require) ->
       @_children = []
 
     getChildren: -> @_children
+
+    isChild: (subview) ->
+      assert subview instanceof AbstractView, 'AbstractView instance required'
+      return @getChildren().indexOf(subview) > -1
 
     render: ->
       @setRendered()
