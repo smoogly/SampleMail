@@ -10,11 +10,6 @@ define (require) ->
   # Another use is to build independent areas on a single page.
   ###
   require('inherit') require('./ReactCompositeView'),
-    _getClassHooks: ->
-      hooks = @__base.apply(@, arguments)
-      hooks.onChange = -> @forceUpdate() # Change has happened if children have changed
-      return hooks
-
     render: ->
       @trigger(@__self.ONCHANGE_EVENT_NAME) if @isChanged()
 

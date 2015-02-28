@@ -28,14 +28,22 @@ define (require) ->
 
       render: -> that._getTemplate().call(@)
 
-      onChange: -> @setState(that.model.toJSON()) if that.model?
+      onChange: ->
+        if that.model?
+          @setState(that.model.toJSON())
+        else
+          @forceUpdate()
 
       componentWillMount: ->
         do @onChange
         that.on(ONCHANGE_EVENT_NAME, @onChange)
 
+      componentDidMount: ->
+        that.el = @getDOMNode()
+
       componentWillUnmount: ->
         that.off(ONCHANGE_EVENT_NAME)
+        that.el = null
 
   ,
     # Injection method for testing

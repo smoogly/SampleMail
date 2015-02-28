@@ -114,4 +114,61 @@ define (require) ->
         expect @instance._getClass()
         	.to.be.a @fakeReact.types.Class
 
+    describe '_getClassHooks', ->
+      beforeEach ->
+        @BackboneModel = require('Backbone').Model;
 
+        @getFakeReactClass = =>
+          FakeReactClass = require('inherit') @instance._getClassHooks()
+          fakeReactClass = new FakeReactClass()
+
+          fakeReactClass.forceUpdate = sinon.stub()
+          fakeReactClass.setState = sinon.stub()
+
+          return fakeReactClass
+
+
+      describe 'onChange', ->
+        it 'should call forceUpdate if instance has no model', ->
+          @instance.model = undefined
+          fakeReactClass = @getFakeReactClass()
+
+          fakeReactClass.onChange()
+          expect fakeReactClass.forceUpdate.calledOnce
+            .to.be true
+
+        it 'should not call setState if instance has no model', ->
+          @instance.model = undefined
+          fakeReactClass = @getFakeReactClass()
+
+          fakeReactClass.onChange()
+          expect fakeReactClass.setState.called
+            .to.be false
+
+        it 'should call setState if instance has a model', ->
+          fakeReactClass = @getFakeReactClass()
+
+          fakeReactClass.onChange()
+          expect fakeReactClass.setState.calledOnce
+            .to.be true
+
+        it 'should call setState with a model JSON if instance has a model', ->
+          bbmodel = new @BackboneModel
+
+          toJSON= {}
+          sinon.stub bbmodel, 'toJSON'
+            .returns toJSON
+
+          @instance.model = bbmodel
+
+          fakeReactClass = @getFakeReactClass()
+          fakeReactClass.onChange()
+          expect fakeReactClass.setState.calledWithExactly(toJSON)
+            .to.be true
+
+        it 'should not call forceUpdate if instance has a model', ->
+          fakeReactClass = @getFakeReactClass()
+
+          fakeReactClass.onChange()
+          expect fakeReactClass.forceUpdate.called
+            .to.be false

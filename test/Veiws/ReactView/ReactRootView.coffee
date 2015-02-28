@@ -52,16 +52,3 @@ define (require) ->
           .to.be true
 
         expect @instance.trigger.calledWithExactly(@Successor.ONCHANGE_EVENT_NAME)
-
-    describe '_getClassHooks', ->
-      beforeEach ->
-        @FakeReactClass = require('inherit') @instance._getClassHooks()
-
-        @fakeReactClass = new @FakeReactClass()
-        @fakeReactClass.forceUpdate = sinon.stub()
-
-      describe 'onChange', ->
-        it 'should call foceUpdate', ->
-          @fakeReactClass.onChange()
-          expect @fakeReactClass.forceUpdate.calledOnce
-            .to.be true

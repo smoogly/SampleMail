@@ -15,6 +15,10 @@ define (require) ->
       # assert view not instanceof require('./ReactRootView'), 'Root views are not rendered into React.elements and should not be appended'
       @__base.apply @, arguments
 
+    remove: (view) ->
+      @__base.apply(@, arguments)
+      @__self._getReact().unmountComponentAtNode(view.el) #TODO: test for that
+
     render: ->
       # Re-render children
       @__base.apply @, arguments
