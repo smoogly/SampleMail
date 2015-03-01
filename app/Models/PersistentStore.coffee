@@ -38,6 +38,7 @@ define (require) ->
       return @
 
     getKey: (id) ->
+      id = id || ''
       @_typeName + @__self.TYPE_ID_SEPARATOR + id
 
     put: (id, item) ->

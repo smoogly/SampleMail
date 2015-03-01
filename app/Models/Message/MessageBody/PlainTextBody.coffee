@@ -11,8 +11,9 @@ define ['_', 'inherit', './AbstractMessageBody'], (_, inherit, AbstractMessageBo
 
       # Should not contain any quotes
       firstline.split('>', 2)[0]
-  ,
+
     getContentType: -> supportedContentType
+  ,
     decodes: (contentType) -> contentType is supportedContentType
 
 

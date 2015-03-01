@@ -1,12 +1,13 @@
 define [
   '_', 'inherit', 'assert'
+  '../../Error/NotImplementedError'
   './MessageBody/AbstractMessageBody'
   './Destination/AbstractDestination'
   './Label/AbstractLabel'
-], (_, inherit, assert, AbstractMessageBody, AbstractDestination, AbstractLabel) ->
+], (_, inherit, assert, NotImplementedError, AbstractMessageBody, AbstractDestination, AbstractLabel) ->
   checkDestinations = (destinations) -> _.each destinations, (destination) -> assert destination instanceof AbstractDestination, 'Destination expected'
 
-  inherit
+  AbstractMessage = inherit
     __constructor: ->
       @_labels = []
 
@@ -44,6 +45,8 @@ define [
       @_from = destinatioin
       return @
 
+    getTo: -> @_to
+
     getFrom: ->
       assert @_from isnt null, 'From field has never been defined'
       return @_from
@@ -58,5 +61,22 @@ define [
       @_labels.push(label)
       return @
 
+    getLabels: -> @_labels
+
     getRecipients: ->
       return @_to.concat @_cc.concat @_bcc
+
+  ,
+    factory: (serializedMessage) ->
+      throw new NotImplementedError() #TODO: implement
+
+    serializer: (message) ->
+      assert message instanceof AbstractMessage, 'Abstract message expected'
+
+      JSON.stringify
+        title: message.getTitle()
+        body: AbstractMessageBody.serialize message.getBody()
+        labels: message.getLabels().map AbstractLabel.serialize
+        to: message.getTo().map AbstractDestination.serialize
+
+  return AbstractMessage

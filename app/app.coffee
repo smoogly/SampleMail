@@ -45,6 +45,7 @@ define (require) ->
       # Single message view
       @_singleMessageView = new SingleMessageView()
       @_singleMessageView.on SingleMessageView.TRASHED_EVENT, =>
+        @_mailbox.persistAll() #Not optimal, should persist one changed message
         @_router.navigate '', trigger: yes
 
       #Views
